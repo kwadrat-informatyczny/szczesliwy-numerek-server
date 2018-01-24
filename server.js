@@ -8,9 +8,14 @@ console.log(numerek);
 
 var http = require('http');
 
+var dane = {};
+
+dane.numerek = numerek;
+dane.timestamp = new Date().getTime()
+
 http.createServer(function(request, response){
-  response.writeHead(200, {'Content-type':'text/plan'});
-  response.write(numerek.toString());
+  response.writeHead(200, {'Content-type':'application/json'});
+  response.write( JSON.stringify(dane) );
   response.end( );
 
 }).listen(80);
