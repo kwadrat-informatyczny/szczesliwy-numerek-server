@@ -11,14 +11,21 @@ var http = require('http');
 var dane = {};
 
 dane.numerek = numerek;
-dane.timestamp = new Date().getTime()
+dane['data_losowania'] = new Date().getTime()
+
+var jutro = new Date();
+jutro.setDate(jutro.getDate() + 1);
+dane['data_kolejnego_losowania'] = jutro.getTime()
+
+dane['school_name'] = "ZS1 Bochnia";
+dane['school_ico'] = "http://zs1.bochnia.pl/images/logobiale.png";
 
 http.createServer(function(request, response){
   response.writeHead(200, {'Content-type':'application/json'});
   response.write( JSON.stringify(dane) );
   response.end( );
 
-}).listen(80);
+}).listen(801);
 
 // 1. Wylosowac liczbe / zapamietac
 // 2. Zapamietac date
