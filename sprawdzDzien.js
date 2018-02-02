@@ -3,7 +3,7 @@
 
 var dzien = new Date(); //ta zmienna pobiera date urządzenia, ale skoro robi to serwer to raczej nie powinno być błędów jeśli użytkownik aplikacji ma inną datę niż aktualna
 
-if(sprawdzDzien(dzien){
+if(sprawdzDzien(dzien)){
 	//tu powinien znajdować się skrypt losujący numerek
 }
 else{
