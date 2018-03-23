@@ -33,6 +33,16 @@ fs.readFile('settings.json',  "utf8", (err, data) => {
 
 http.createServer(function(request, response){
 
+  response.setHeader('Access-Control-Allow-Origin', '*');
+	response.setHeader('Access-Control-Request-Method', '*');
+	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+	response.setHeader('Access-Control-Allow-Headers', '*');
+	if ( request.method === 'OPTIONS' ) {
+		response.writeHead(200);
+		response.end();
+		return;
+	}
+
   // check if we need to generate number
   var now = new Date(),
     old = new Date(now.getTime() - 24 * 60 * 60);
