@@ -4,8 +4,8 @@ var fs = require('fs'),
   
 var dane = {},
   port = 801;
-dane.school_name = "ZS1 Bochnia";
-dane.school_ico = "http://zs1.bochnia.pl/images/logobiale.png";
+dane['school_name'] = "ZS1 Bochnia";
+dane['school_ico'] = "http://zs1.bochnia.pl/images/logobiale.png";
 
 //-----SAVING NUMBERS INTO FILE-----
 fs.readFile('settings.json',  "utf8", (err, data) => {
@@ -15,12 +15,12 @@ fs.readFile('settings.json',  "utf8", (err, data) => {
   if (data) dane = JSON.parse(data);
 
   if (!dane.size)
-    dane.size = 32;
+    dane['size'] = 32;
 
   // setup numbers for draw
-  if (!dane.toDraw || dane.toDraw.length === 0) {
+  if (!dane['toDraw'] || dane.toDraw.length === 0) {
     let c = 0;
-    dane.toDraw = [];
+    dane['toDraw'] = [];
     while (c < dane.size) {
       c++;
       dane.toDraw.push(c);
@@ -50,17 +50,17 @@ http.createServer(function(request, response){
   var now = new Date(),
     old = new Date(now.getTime() - 24 * 60 * 60);
 
-  if (dane.data_losowania)
-    old = new Date(dane.data_losowania);
+  if (dane['data_losowania'])
+    old = new Date(dane['data_losowania']);
 
   var when = getNextDrawTime(old);
 	console.log("Last draw time: " + old.toISOString() + ", next draw: " + when.toISOString());
-	dane.nastepne_losowanie = when.getTime();
+	dane['nastepne_losowanie'] = when.getTime();
 
-  if ((when.getTime() <= now.getTime()) || !dane.numerek) {
-    dane.numerek = getRandomInt(0, dane.toDraw.length);
+  if ((when.getTime() <= now.getTime()) || !dane['numerek']) {
+    dane['numerek'] = getRandomInt(0, dane.toDraw.length);
     dane.toDraw.splice(dane.toDraw.indexOf(dane.numerek), 1);
-    dane.data_losowania = now.getTime();
+    dane['data_losowania'] = now.getTime();
 
     console.log("GENERATED NUMBER --> " + dane.numerek + " <--");
 
