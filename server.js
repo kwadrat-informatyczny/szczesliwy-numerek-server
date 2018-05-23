@@ -12,8 +12,7 @@ fs.readFile('settings.json',  "utf8", (err, data) => {
 
   if (data) dane = JSON.parse(data)
 
-  if (!dane.size)
-    dane.size = 32;
+  dane.size = 36;
 
   // setup numbers for draw
   if (!dane.toDraw || dane.toDraw.length == 0) {
@@ -58,6 +57,9 @@ http.createServer(function(request, response){
     dane.numerek = getRandomInt(0, dane.toDraw.length);
     dane.toDraw.splice(dane.toDraw.indexOf(dane.numerek), 1);
     dane['data_losowania'] = now.getTime();
+
+    if (!dane.history) dane.history = {}
+    dane.history[dane['data_losowania']] = dane.numerek;
 
     console.log("GENERATED NUMBER --> " + dane.numerek + " <--")
 
