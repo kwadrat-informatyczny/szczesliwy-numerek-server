@@ -105,7 +105,7 @@ function getNextDrawTime(czas) {
 	  jutro.setDate(jutro.getDate() + 1);
 	}
 	
-  jutro.setHours(20);
+  jutro.setHours(18);
   jutro.setMinutes(0);
   jutro.setSeconds(0);
 
