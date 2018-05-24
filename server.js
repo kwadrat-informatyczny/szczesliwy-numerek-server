@@ -96,18 +96,18 @@ function getNextDrawTime(czas) {
 		console.log("Saturday");
 		jutro.setDate(jutro.getDate() + 1);
 	}
-	else if (jutro.getDay() == 4 && jutro.getHours() >= 20){
+	else if (jutro.getDay() == 4 && jutro.getHours() >= 18){
 		console.log("Sunday");
 		jutro.setDate(jutro.getDate() + 3);
 	}
-	else if (jutro.getHours() < 20){
+	else if (jutro.getHours() < 18){
 				//jutro = new Date();
 	}
 	else {
 	  jutro.setDate(jutro.getDate() + 1);
 	}
 
-  jutro.setHours(20);
+  jutro.setHours(18);
   jutro.setMinutes(0);
   jutro.setSeconds(0);
 
