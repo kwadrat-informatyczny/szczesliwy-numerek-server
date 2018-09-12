@@ -5,7 +5,8 @@ var fs = require('fs'),
 var dane = {},
   port = 8080;
 dane['school_name'] = "ZS1 Bochnia";
-dane['school_ico'] = "http://zs1.bochnia.pl/images/logobiale.png";
+dane['school_ico'] = "http://zs1.bochnia.pl/images/logobiale.png",
+requestNmbr = 0;
 
 //-----SAVING NUMBERS INTO FILE-----
 fs.readFile('settings.json',  "utf8", (err, data) => {
@@ -45,6 +46,9 @@ http.createServer(function(request, response){
 		return;
 	}
 
+  requestNmbr++;
+  console.log("News request #" + requestNmbr)
+
   // check if we need to generate number
   var now = new Date(),
     old = new Date(now.getTime() - 24 * 60 * 60);
@@ -52,8 +56,8 @@ http.createServer(function(request, response){
   if (dane['data_losowania'])
     old = new Date(dane['data_losowania']);
 
-  var when = getNextDrawTime(old);
-	console.log("Last draw time: " + old.toISOString() + ", next draw: " + when.toISOString());
+  var when = getNextDrawTime(now);
+	console.log("(#" + requestNmbr + ") Last draw time: " + old.toISOString() + ", next draw: " + when.toISOString());
 	dane['nastepne_losowanie'] = when.getTime();
 
   if ((when.getTime() <= now.getTime()) || !dane['numerek']) {
@@ -64,10 +68,10 @@ http.createServer(function(request, response){
     if (!dane.history) dane.history = {}
     dane.history[dane['data_losowania']] = dane.numerek;
 
-    console.log("GENERATED NUMBER --> " + dane.numerek + " <--")
+    console.log("(#" + requestNmbr + ") GENERATED NUMBER --> " + dane.numerek + " <--")
 
     fs.writeFile('settings.json', JSON.stringify(dane) , (err) => {
-      if (err) return console.log("Problem with saving file! " + err.toString());
+      if (err) return console.log("(#" + requestNmbr + ") Problem with saving file! " + err.toString());
     });
   }
 
@@ -89,15 +93,12 @@ function getNextDrawTime(czas) {
 		console.log("Starting from " + jutro.toISOString());
 
 	if (jutro.getDay() == 5){
-		console.log("Friday");
 		jutro.setDate(jutro.getDate() + 2);
 	}
 	else if (jutro.getDay() == 6) {
-		console.log("Saturday");
 		jutro.setDate(jutro.getDate() + 1);
 	}
 	else if (jutro.getDay() == 4 && jutro.getHours() >= 18){
-		console.log("Sunday");
 		jutro.setDate(jutro.getDate() + 3);
 	}
 	else if (jutro.getHours() < 18){
@@ -107,9 +108,28 @@ function getNextDrawTime(czas) {
 	  jutro.setDate(jutro.getDate() + 1);
 	}
 
+  // check if that day is prohibited
+  // example: 20180901
+  if (dane.freeDays && Array.isArray(dane.freeDays)) {
+    if (dane.freeDays.indexOf(getStrRepresentative(jutro)) > -1) {
+      console.log("Selected day in prohibited array. " + getStrRepresentative(jutro) + ", " + dane.freeDays.toString())
+      jutro.setDate(jutro.getDate() + 1);
+      jutro = getNextDrawTime(jutro);
+    }
+  }
+
   jutro.setHours(18);
   jutro.setMinutes(0);
   jutro.setSeconds(0);
 
   return jutro;
+}
+
+function getStrRepresentative(d) {
+  return d.getFullYear().toString() + leadingZero((d.getMonth()+1).toString()) + leadingZero(d.getDate().toString());
+}
+
+function leadingZero(str) {
+  if (str.length < 2) return leadingZero("0" + str);
+  return str;
 }
