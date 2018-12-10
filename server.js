@@ -3,7 +3,7 @@ var fs = require('fs'),
   http = require('http');
 
 var dane = {},
-  port = 8080;
+port = 9960;
 dane['school_name'] = "ZS1 Bochnia";
 dane['school_ico'] = "http://zs1.bochnia.pl/images/logobiale.png",
 requestNmbr = 0;
